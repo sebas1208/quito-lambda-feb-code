@@ -3,10 +3,11 @@ Repositorio con el codigo para el Quito Lamda del mes de Febrero 2022
 
 ## Instrucciones para instalar PHP 8.1
 
-*Notas: Para este demo usaremos Ubuntu 20.04
+**Notas:** Para este demo usaremos Ubuntu 20.04
 
-* Vamos a compilar PHP desde 0 aunque tambien hay como instalar desde los repositorios oficiales de Ubuntu o la distro/OS que tengas instalado.
+[Install PHP on ubuntu](https://computingforgeeks.com/how-to-install-php-on-ubuntu-linux-system/)
 
+### Compilar PHP 8.1 desde 0
 - Install `asdf`
 ```
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0 
