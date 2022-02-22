@@ -21,19 +21,25 @@ class ListSnippets extends Component
 
     public function mount()
     {
-        if($this->filterTag) {
+        if ($this->filterTag) {
             $this->filterBy(
                 'filterTag',
                 fn (Snippet $snippet) => in_array($this->filterTag, $snippet->tags)
             );
+
+            return;
         }
 
-        if($this->filterLanguage) {
+        if ($this->filterLanguage) {
             $this->filterBy(
                 'filterLanguage',
                 fn (Snippet $snippet) => $snippet->language === $this->filterLanguage
             );
+
+            return;
         }
+
+        $this->snippets = Snippet::all();
     }
 
     public function render()

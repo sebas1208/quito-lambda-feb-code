@@ -1,7 +1,8 @@
 <div>
     <div class="container mx-auto px-6 py-6 max-w-7xl">
         @if (session()->has('message'))
-            <div class="border-lime-500 border-2 text-lime-500 text-lg w-full text-center bg-stone-100 rounded-md mb-4 h-12">
+            <div
+                class="border-lime-500 border-2 text-lime-500 text-lg w-full text-center bg-stone-100 rounded-md mb-4 h-12">
                 <span class="align-sub">{{ session('message') }}</span>
             </div>
         @endif
@@ -22,8 +23,9 @@
                                         Title
                                     </label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input class="w-full rounded-md border-gray-300" wire:model="snippet.title"
-                                            type="text" placeholder="Enter your title">
+                                        <input class="w-full rounded-md border-gray-300"
+                                            wire:model.debounce.500="snippet.title" type="text"
+                                            placeholder="Enter your title">
                                     </div>
                                     <div class="m-2">
                                         @error('snippet.title')
@@ -40,7 +42,7 @@
                                     </label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
                                         <select wire:change="changeLanguageMode" wire:model="snippet.language"
-                                            class="rounded-md block flex-1 border-gray-300" name="language"
+                                            class="rounded-md block flex-1 border-gray-300 text-gray-600" name="language"
                                             id="language">
                                             <option value class="text-gray-700">Select the Language</option>
                                             @foreach ($languages as $_language)
@@ -57,10 +59,12 @@
                             </div>
 
                             <div>
-                                <label for="about" class="block text-sm font-medium text-gray-700"> Code </label>
+                                <label for="code" class="block text-sm font-bold text-gray-700">
+                                    Code
+                                </label>
                                 <div class="mt-1" wire:ignore>
-                                    <textarea wire:key="code" wire:model="snippet.code" class="rounded-md" id="code"
-                                        name="code" rows="10"></textarea>
+                                    <textarea wire:model="snippet.code" class="rounded-md" id="code" name="code"
+                                        rows="10"></textarea>
                                 </div>
                                 <div class="m-2">
                                     @error('snippet.code')
@@ -70,12 +74,14 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 pb-1"> Tags </label>
+                                <label for="tags" class="block text-sm font-bold text-gray-700">
+                                    Tags
+                                </label>
                                 <input wire:keydown.enter="addTag" wire:model="tag" class="rounded-md border-gray-300"
                                     type="text" placeholder="Enter your tags">
                                 <div>
                                     @foreach ($snippet->tags as $tag)
-                                        <div wire:key="{{ $loop->index }}"
+                                        <div wire:key="{{ $tag . strval($loop->index) }}"
                                             class="bg-blue-100 inline-flex items-center text-sm rounded mt-2 mr-1 overflow-hidden">
                                             <span
                                                 class="ml-2 mr-1 leading-relaxed truncate max-w-xs px-1">{{ $tag }}</span>
@@ -118,27 +124,30 @@
                 Haskell: "haskell"
             };
 
-            const textArea = document.getElementById("code");
-            const editor = CodeMirror.fromTextArea(textArea, {
-                lineNumbers: true,
-                theme: "gruvbox-dark",
-                matchBrackets: true,
-                mode: 'php',
-                indentUnit: 4,
-                indentWithTabs: true,
-                tabSize: 4,
-                lineWrapping: true,
-            });
+            const initCodeMirror = () => {
+                const textArea = document.getElementById("code");
+                const editor = CodeMirror.fromTextArea(textArea, {
+                    lineNumbers: true,
+                    theme: "gruvbox-dark",
+                    matchBrackets: true,
+                    mode: 'php',
+                    indentUnit: 4,
+                    indentWithTabs: true,
+                    tabSize: 4,
+                    lineWrapping: true,
+                });
 
-            editor.on('change', (editor) => {
-                textArea.value = editor.getValue();
-                textArea.dispatchEvent(new Event('change'));
-                @this.emit('textAreaUpdated', textArea.value);
-            });
+                editor.on('change', (editor) => {
+                    textArea.value = editor.getValue();
+                    @this.emit('textAreaUpdated', textArea.value);
+                });
 
-            Livewire.on("changeEditorMode", (language) => {
-                editor.setOption('mode', languageMap[language])
-            });
+                Livewire.on("changeEditorMode", (language) => {
+                    editor.setOption('mode', languageMap[language])
+                });
+            }
+
+            initCodeMirror();
         </script>
     @endpush
 </div>

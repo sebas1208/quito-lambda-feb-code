@@ -5,6 +5,9 @@ namespace App\Models\Snippets;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property array $tags
+ */
 class Snippet extends Model
 {
     use HasFactory;

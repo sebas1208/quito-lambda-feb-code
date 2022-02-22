@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div class="container mx-auto px-6 py-6 max-w-7xl">
     <section class="pt-10 pb-10 lg:pb-20 bg-[#F3F4F6]">
         <div class="mt-5 mb-5 md:mt-0 md:col-span-2">
             <div class="shadow sm:rounded-md sm:overflow-hidden">
@@ -11,16 +11,15 @@
                             <div class="mt-1 mb-2 rounded-md">
                                 <span>Tag:</span>
                             </div>
-                            <input wire:model.debounce.500="filterTag" class="rounded-md border-gray-300"
-                                type="text" placeholder="Search by tags ">
+                            <input wire:model.debounce.500="filterTag" class="rounded-md border-gray-300" type="text"
+                                placeholder="Search by tags ">
                         </div>
                         <div>
                             <div class="mt-7 mb-2 rounded-md">
                                 <span>Language:</span>
                             </div>
-                            <select wire:model="filterLanguage"
-                                class="rounded-md block flex-1 border-gray-300" name="language"
-                                id="language">
+                            <select wire:model="filterLanguage" class="rounded-md block flex-1 border-gray-300"
+                                name="language" id="language">
                                 <option value>All</option>
                                 @foreach ($languages as $_language)
                                     <option wire:key="{{ $loop->index }}">{{ $_language }}</option>
@@ -33,7 +32,7 @@
         </div>
         <div class="flex flex-wrap -mx-4">
             {{-- TODO: show a message when no snippets filtered --}}
-            @foreach ($snippets as $snippet)
+            @forelse ($snippets as $snippet)
                 <div class="w-full md:w-1/2 xl:w-full px-4">
                     <div class="bg-white rounded-lg overflow-hidden mb-10">
                         <div class="p-8 sm:p-9 md:p-7 xl:p-9 text-xl text-gray-700">
@@ -67,7 +66,15 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="w-full md:w-1/2 xl:w-full px-4 text-center text-bold">
+                    <div class="bg-white rounded-lg overflow-hidden mb-10 h-12 pt-2">
+                        <span class="ml-6">No Snippets for this filter
+                            <a class="underline text-blue-500" href="{{ route('create-snippet') }}">Create one</a>
+                        </span>
+                    </div>
+                </div>
+            @endforelse
         </div>
     </section>
 

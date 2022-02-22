@@ -45,6 +45,8 @@ class CreateSnippet extends Component
 
     public function addTag()
     {
+        if (!$this->tag) return;
+
         $this->snippet->tags = [...$this->snippet->tags, $this->tag];
         $this->tag = '';
     }
@@ -58,16 +60,16 @@ class CreateSnippet extends Component
         ];
     }
 
-    public function updated(string $property) {
+    public function updated(string $property)
+    {
         $this->validateOnly($property);
     }
 
     public function save()
     {
         $this->validate();
-
         $this->snippet->save();
 
-        session()->flash('message', 'Snippet successfully created.');
+        return redirect('create-snippet')->with('message', 'Snippet successfully created.');
     }
 }
