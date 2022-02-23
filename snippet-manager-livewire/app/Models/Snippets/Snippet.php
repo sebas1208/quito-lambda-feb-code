@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property array $tags
+ * @property string $language
+ * @property string $title
+ * @property string $code
  */
 class Snippet extends Model
 {
@@ -30,4 +33,9 @@ class Snippet extends Model
     protected $casts = [
         'tags' => 'array',
     ];
+
+    public function getLanguageLabel(): string
+    {
+        return Language::from($this->language)->label();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Snippets;
 
+use App\Models\Snippets\Language;
 use App\Models\Snippets\Snippet;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -11,7 +12,7 @@ class ListSnippets extends Component
     public Collection $snippets;
     public string $filterTag = '';
     public string $filterLanguage = '';
-    public array $languages = ['PHP', 'Javascript', 'Java', 'C#', 'Haskell'];
+    public array $languages = [];
 
     protected $queryString = [
         'filterTag' => ['except' => ''],
@@ -21,6 +22,10 @@ class ListSnippets extends Component
 
     public function mount()
     {
+        $this->languages = collect(Language::cases())
+            ->map(fn (Language $ln) => $ln->label())
+            ->toArray();
+
         if ($this->filterTag) {
             $this->filterBy(
                 'filterTag',
@@ -42,11 +47,6 @@ class ListSnippets extends Component
         $this->snippets = Snippet::all();
     }
 
-    public function render()
-    {
-        return view('livewire.snippets.list-snippets');
-    }
-
     public function updatedFilterTag()
     {
         $this->filterBy(
@@ -59,7 +59,7 @@ class ListSnippets extends Component
     {
         $this->filterBy(
             'filterLanguage',
-            fn (Snippet $snippet) => $snippet->language === $this->filterLanguage
+            fn (Snippet $snippet) => $snippet->language === Language::from($this->filterLanguage)->name
         );
     }
 
@@ -74,5 +74,10 @@ class ListSnippets extends Component
         $this->snippets = Snippet::all()->filter($filter)->values();
 
         $this->emit('reloadCodeMirror', $this->snippets);
+    }
+
+    public function render()
+    {
+        return view('livewire.snippets.list-snippets');
     }
 }

@@ -2,19 +2,20 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Snippets\Language;
 use Livewire\Component;
 use App\Models\Snippets\Snippet;
 
 class CreateSnippet extends Component
 {
     public Snippet $snippet;
-    public array $languages = ['PHP', 'Javascript', 'Java', "C#", "Haskell"];
+    public array $languages = [];
     public string $tag = "";
 
     protected $rules = [
         'snippet.title' => 'required|string|max:100|min:4',
         'snippet.language' => 'required|string|max:20',
-        'snippet.code' => 'required|string',
+        'snippet.code' => 'required|string|min:10',
         'snippet.tags' => 'array',
     ];
 
@@ -22,6 +23,10 @@ class CreateSnippet extends Component
 
     public function mount()
     {
+        $this->languages = collect(Language::cases())
+            ->map(fn (Language $ln) => $ln->label())
+            ->toArray();
+
         $this->snippet = new Snippet();
         $this->snippet->language = "";
         $this->snippet->tags = [];
@@ -40,7 +45,7 @@ class CreateSnippet extends Component
     public function textAreaUpdated(string $code)
     {
         $this->snippet->code = $code;
-        $this->validate();
+        $this->validateOnly('snippet.code');
     }
 
     public function addTag()
@@ -68,6 +73,8 @@ class CreateSnippet extends Component
     public function save()
     {
         $this->validate();
+
+        $this->snippet->language = Language::fromLabel($this->snippet->language)->name;
         $this->snippet->save();
 
         return redirect('create-snippet')->with('message', 'Snippet successfully created.');
