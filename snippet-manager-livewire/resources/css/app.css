@@ -1,0 +1,11 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Code Mirror */
+@import 'codemirror/lib/codemirror.css';
+@import 'codemirror/theme/darcula-dark.css';
+
+.CodeMirror {
+    border-radius: 5px;
+}
