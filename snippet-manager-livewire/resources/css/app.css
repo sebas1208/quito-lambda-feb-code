@@ -4,7 +4,7 @@
 
 /* Code Mirror */
 @import 'codemirror/lib/codemirror.css';
-@import 'codemirror/theme/gruvbox-dark.css';
+@import 'codemirror/theme/darcula-dark.css';
 
 .CodeMirror {
     border-radius: 5px;
